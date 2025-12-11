@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>早安问候 | 每日好心情</title>
+    <!-- 最新编译并压缩的 CSS -->
+    <link href="https://www.w3school.com.cn/lib/bs/bootstrap.css" rel="stylesheet">
+    <!-- 引入字体图标 -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* 全局样式 */
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", sans-serif;
+            background: linear-gradient(135deg, #f3e419af 0%, #1ea4a8a4 50%, #dd08c1be 80%);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        /* 标题样式 */
+        .greeting-title {
+            color: #2c3e50;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            letter-spacing: 2px;
+        }
+
+        /* 容器样式 */
+        #container {
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            border-radius: 5px 100px 5px 100px;
+            box-shadow: 10px 30px 60px rgb(251, 255, 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s ease;
+            /* clip-path: path("M400,60 C520,10 750,140 400,360 C50,140 280,10 400,60 Z"); */
+        }
+
+        /* 遮罩层，提升文字可读性 */
+        #container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+
+        /* 文字内容样式 */
+        #content {
+            position: relative;
+            z-index: 2;
+            color: white;
+            font-size: 22px;
+            line-height: 1.8;
+            text-align: center;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+            background-color: rgba(209, 209, 146, 0.1);
+            /* background-color: linear-gradient(135deg, rgba(211, 118, 118, 0.548) 0%, rgba(248, 1, 1, 0.911) 100%); */
+            backdrop-filter: blur(10px);
+            border-radius: 10px 30px 10px 30px;
+            font-weight: 500;
+            animation: fadeIn 1.5s ease;
+            padding: 10px;
+        }
+
+        /* 水波扩散动画核心 */
+        @keyframes waterWave {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 0.8;
+            }
+
+            10% {
+                width: 100;
+                height: 50px;
+                opacity: 0.4;
+            }
+
+            100% {
+                /* 扩散到容器外（值大于容器对角线） */
+                width: 2400px;
+                height: 1200px;
+                opacity: 0;
+            }
+        }
+
+        /* 水波伪元素1（主波纹） */
+        #content::before {
+            content: '';
+            position: absolute;
+            /* 波纹起始位置（可调整：如center/left/right） */
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            /* 圆形波纹 */
+            border-radius: 50%;
+            /* 波纹颜色（半透明，贴合毛玻璃质感） */
+            background: rgba(255, 255, 255, 0.2);
+            /* 扩散动画：6秒循环，线性速度 */
+            animation: waterWave 6s infinite linear;
+            /* 居中（基于top/left的50%偏移） */
+            transform: translate(-50%, -50%);
+            /* 波纹层级：在毛玻璃下方，背景图上方 */
+            z-index: 1;
+        }
+
+        /* 水波伪元素2（副波纹，延迟启动，增加层次感） */
+        #content::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: waterWave 8s infinite linear 2s;
+            /* 延迟2秒 */
+            transform: translate(-50%, -50%);
+            z-index: 1;
+        }
+
+        /* 按钮样式 */
+        .refresh-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            transition: all 0.3s ease;
+            color: white;
+            font-weight: 500;
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 10px 16px 30px rgba(239, 255, 9, 0.8);
+            color: white;
+        }
+
+        .refresh-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* 加载动画 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            /* from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(10); } */
+        }
+
+        /* 容器悬停效果 */
+        #container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            #container {
+                height: 350px;
+                padding: 20px;
+            }
+
+            #content {
+                font-size: 18px;
+            }
+
+            .greeting-title {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #container {
+                height: 300px;
+            }
+
+            #content {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <h1 class="greeting-title text-center mb-5">
+            <i class="fas fa-sun text-warning me-2"></i>早安问候
+        </h1>
+
+        <div id="container">
+            <p id="content"></p>
+        </div>
+
+        <div class="d-flex justify-content-center mt-5">
+            <button onclick="refresh()" class="refresh-btn">
+                <i class="fas fa-sync-alt me-2"></i>刷新
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function () {
+            refresh();
+        });
+
+        /* 刷新背景图片和内容 */
+        function refresh() {
+            // 添加加载状态
+            document.getElementById('content').innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>加载中...';
+
+            // 同时刷新背景和内容
+            Promise.all([
+                refresh_background(),
+                refresh_content()
+            ]).catch(err => {
+                document.getElementById('content').innerHTML = '加载失败，请点击刷新重试';
+                console.error('加载出错:', err);
+            });
+        }
+
+        /* 刷新文字内容 */
+        function refresh_content() {
+            return new Promise((resolve, reject) => {
+                let xhr = new XMLHttpRequest();
+                const api = "https://jkapi.com/api/zaoan?type=json";
+                xhr.open("get", api, true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 200) {
+                            try {
+                                const data = JSON.parse(xhr.responseText);
+                                document.getElementById("content").innerHTML = data.content;
+                                resolve();
+                            } catch (e) {
+                                reject(e);
+                            }
+                        } else {
+                            reject(new Error('内容接口请求失败'));
+                        }
+                    }
+                }
+                xhr.onerror = reject;
+                xhr.send();
+            });
+        }
+
+        /* 刷新背景图片 */
+        function refresh_background() {
+            return new Promise((resolve, reject) => {
+                let xhr = new XMLHttpRequest();
+                const api = "https://api.opics.org/api/?json";
+                xhr.open("get", api, true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 200) {
+                            try {
+                                const data = JSON.parse(xhr.responseText);
+                                // 预加载图片
+                                const img = new Image();
+                                img.onload = function () {
+                                    document.getElementById("container").style.backgroundImage = "url(" + data.url + ")";
+                                    resolve();
+                                };
+                                img.onerror = reject;
+                                img.src = data.url;
+                            } catch (e) {
+                                reject(e);
+                            }
+                        } else {
+                            reject(new Error('图片接口请求失败'));
+                        }
+                    }
+                }
+                xhr.onerror = reject;
+                xhr.send();
+            });
+        }
+
+        setInterval(() => {
+            refresh();
+        }, 2500);
+    </script>
+</body>
+
+</html>
